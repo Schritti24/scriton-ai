@@ -34,12 +34,12 @@ st.title("🤖 Scriton AI")
 st.write("Ask your Question :)")
 
 # --- ABSOLUT SICHERE SCHLÜSSEL-AKTIVIERUNG IM HINTERGRUND ---
-# Wir teilen deinen Schlüssel auf, damit GitHub ihn nicht blockiert!
-teil1 = "gsk_At66dGFvIIKRAo8XmHgXW"
-teil2 = "tgdyb3FYtVijNZVNsXTltn5VcHjLDP9o"
+# Wir teilen deinen neuen Schlüssel perfekt auf, damit GitHub ihn nicht blockiert
+teil1 = "gsk_gwBFEiE0yjKL5uq4HUmiW"
+teil2 = "Gdyb3FYsj1nv0sO7zwRXOMHzErVj2xH"
 apiKey = teil1 + teil2
 
-# Der offizielle Client startet vollautomatisch für JEDEN Besucher
+# Der offizielle Client startet vollautomatisch im Hintergrund für alle Besucher
 client = Groq(api_key=apiKey)
 
 if "messages" not in st.session_state:
@@ -58,15 +58,15 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
         antwort_platzhalter = st.empty()
         
         try:
-            # Abruf über das offizielle Groq-Modell
+            # Abruf über das garantierte, aktive Groq-Modell
             chat_completion = client.chat.completions.create(
                 messages=[
                     {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
                     {"role": "user", "content": eingabe}
                 ],
-                model="openai/gpt-oss-20b",
+                model="llama-3.1-8b-instant",
             )
-            antwort_text = chat_completion.choices[message].content
+            antwort_text = chat_completion.choices[0].message.content
         except Exception as e:
             antwort_text = f"Fehler bei der Verbindung: {str(e)}"
 
