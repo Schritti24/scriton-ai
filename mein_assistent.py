@@ -1,4 +1,5 @@
 import os
+import requests
 import streamlit as st
 from groq import Groq
 
@@ -33,6 +34,18 @@ if os.path.exists("Scriton.png"):
 st.title("🤖 Scriton AI")
 st.write("Ask your Question :)")
 
+# --- FUNKTION: LIVE-WETTER AUS DEM INTERNET HOLEN ---
+def hole_wetter(stadt):
+    try:
+        # Ruft ein kostenloses, schnelles Wetter-Format ab
+        url = f"https://wttr.in{stadt}?format=%C+%t"
+        antwort = requests.get(url, timeout=5)
+        if antwort.status_code == 200:
+            return antwort.text.strip()
+    except:
+        pass
+    return "Leider konnte ich das Wetter gerade nicht abrufen."
+
 # --- KEY-EINGABE DIREKT IN DER APP ---
 if "api_key" not in st.session_state:
     st.session_state.api_key = ""
@@ -64,18 +77,45 @@ else:
         with st.chat_message("assistant"):
             antwort_platzhalter = st.empty()
             
-            try:
-                # ABSOLUT KORREKTES, LIVE-GESCHALTETES MODELL
-                chat_completion = client.chat.completions.create(
-                    messages=[
-                        {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
-                        {"role": "user", "content": eingabe}
-                    ],
-                    model="openai/gpt-oss-20b",
+            # --- WETTER-ABFRAGE ERKENNEN ---
+            if "wetter" in eingabe.lower():
+                stadt = "Mank"  # Deine Standardstadt
+                woerter = eingabe.split()
+                if "in" in woerter:
+                    idx = woerter.index("in")
+                    if idx + 1 < len(woerter):
+                        stadt = woerter[idx + 1].replace("?", "")
+                
+                # Echte Live-Daten abrufen
+                wetter_daten = hole_wetter(stadt)
+                
+                # Die KI nutzt die echten Daten, um einen netten Antwortsatz zu formulieren
+                prompt_wetter = (
+                    f"Nutze diese echten Wetterdaten: '{wetter_daten}' für die Stadt '{stadt}' "
+                    f"und formuliere eine kurze, freundliche Antwort auf Deutsch für den Nutzer."
                 )
-                antwort_text = chat_completion.choices[0].message.content
-            except Exception as e:
-                antwort_text = f"Fehler bei der Verbindung: {str(e)}"
+                try:
+                    chat_completion = client.chat.completions.create(
+                        messages=[{"role": "user", "content": prompt_wetter}],
+                        model="openai/gpt-oss-20b",
+                    )
+                    antwort_text = chat_completion.choices.message.content
+                except:
+                    antwort_text = f"Das Wetter in {stadt} ist aktuell: {wetter_daten}."
+            
+            # --- NORMALE CHAT-ANFRAGE ---
+            else:
+                try:
+                    chat_completion = client.chat.completions.create(
+                        messages=[
+                            {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
+                            {"role": "user", "content": eingabe}
+                        ],
+                        model="openai/gpt-oss-20b",
+                    )
+                    antwort_text = chat_completion.choices.message.content
+                except Exception as e:
+                    antwort_text = f"Fehler bei der Verbindung: {str(e)}"
 
             antwort_platzhalter.markdown(antwort_text)
         
