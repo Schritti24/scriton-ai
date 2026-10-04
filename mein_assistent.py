@@ -56,15 +56,15 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
         antwort_platzhalter = st.empty()
         
         try:
-            # HIER JETZT DAS AKTIVE MODELL FÜR DIE GRATIS-LEITUNG
+            # HIER JETZT DAS AKTIVE NACHFOLGEMODELL EINGETRAGEN
             chat_completion = client.chat.completions.create(
                 messages=[
                     {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
                     {"role": "user", "content": eingabe}
                 ],
-                model="llama-3.3-70b-specdec",
+                model="openai/gpt-oss-20b",
             )
-            antwort_text = chat_completion.choices[message].content
+            antwort_text = chat_completion.choices.message.content
         except Exception as e:
             antwort_text = f"Fehler bei der Verbindung: {str(e)}"
 
