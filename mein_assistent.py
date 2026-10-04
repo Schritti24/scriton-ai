@@ -41,11 +41,10 @@ if os.path.exists("Scriton.png"):
 st.title("🤖 Scriton AI")
 st.write("Ask your Question :)")
 
-# --- KEY-EINGABE DIREKT IN DER APP (UMGEHT REBOOT- UND SCANNER-FEHLER) ---
+# --- KEY-EINGABE DIREKT IN DER APP ---
 if "api_key" not in st.session_state:
     st.session_state.api_key = ""
 
-# Falls kein Key da ist, zeigen wir ein Eingabefeld in der Seitenleiste oder oben an
 if not st.session_state.api_key:
     st.info("Bitte gib deinen Groq API-Key ein, um Scriton AI zu aktivieren.")
     key_eingabe = st.text_input("Groq API Key (gsk_...)", type="password")
@@ -56,7 +55,6 @@ if not st.session_state.api_key:
         else:
             st.error("Ungültiger Schlüssel! Er muss mit 'gsk_' beginnen.")
 else:
-    # Wenn der Key da ist, starten wir den offiziellen Client
     client = Groq(api_key=st.session_state.api_key)
 
     if "messages" not in st.session_state:
@@ -75,13 +73,13 @@ else:
             antwort_platzhalter = st.empty()
             
             try:
-                # Offizieller Abruf über die Groq-Bibliothek
+                # HIER WAR DER PROBLEM-FEHLER: Neues, aktives Modell eingetragen!
                 chat_completion = client.chat.completions.create(
                     messages=[
                         {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
                         {"role": "user", "content": eingabe}
                     ],
-                    model="llama-3.1-8b-instant",
+                    model="openai/gpt-oss-20b",
                 )
                 antwort_text = chat_completion.choices.message.content
             except Exception as e:
