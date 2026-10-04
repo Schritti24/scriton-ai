@@ -37,6 +37,7 @@ st.markdown("""
 
 st.title("🤖 Scriton AI")
 st.write("Ask your Question :)")
+st.title("Scriton AI")
 
 def hole_wetter(stadt):
     try:
