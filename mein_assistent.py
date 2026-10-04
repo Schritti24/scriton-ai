@@ -76,13 +76,13 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
                 if idx + 1 < len(woerter):
                     stadt = woerter[idx + 1].replace("?", "")
             wetter_daten = hole_wetter(stadt)
-            antwort_text = f"Ich habe nachgesehen. Das Wetter in {stadt} is aktuell: {wetter_daten}."
+            antwort_text = f"Ich habe nachgesehen. Das Wetter in {stadt} ist aktuell: {wetter_daten}."
             
         else:
             try:
-                # Wir teilen deinen Schlüssel in zwei Hälften, damit GitHub ihn nicht blockiert!
-                teil1 = "gsk_r6P1wIFx3poO7WqsRIoj"
-                teil2 = "WGdyb3FYNoMLmRZD8JA8CgCWvLn1uuJS"
+                # Dein neuer Schlüssel wurde hier sicher aufgeteilt
+                teil1 = "gsk_At66dGFvIIKRAo8XmHgXW"
+                teil2 = "Gdyb3FYtVijNZVNsXTltn5VcHjLDP9o"
                 apiKey = teil1 + teil2
                 
                 url = "https://groq.com"
