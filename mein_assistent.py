@@ -22,6 +22,7 @@ st.markdown("""
         padding: 10px !important;
         margin-bottom: 10px !important;
         border: 1px solid #374151 !important;
+        color: #ffffff !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -56,7 +57,6 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
         antwort_platzhalter = st.empty()
         
         try:
-            # HIER JETZT DAS AKTIVE NACHFOLGEMODELL EINGETRAGEN
             chat_completion = client.chat.completions.create(
                 messages=[
                     {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
@@ -64,7 +64,8 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
                 ],
                 model="openai/gpt-oss-20b",
             )
-            antwort_text = chat_completion.choices.message.content
+            # HIER WAR DER FEHLER BEHOBEN: Das [0] wurde hinzugefügt!
+            antwort_text = chat_completion.choices[0].message.content
         except Exception as e:
             antwort_text = f"Fehler bei der Verbindung: {str(e)}"
 
