@@ -80,8 +80,8 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
             
         else:
             try:
-                # Hier liest die App den Schlüssel absolut sicher aus dem Streamlit-Tresor aus
-                apiKey = st.secrets["GROQ_API_KEY"]
+                # Liest das [secrets]-Format aus deinem Streamlit-Tresor aus
+                apiKey = st.secrets["secrets"]["GROQ_API_KEY"]
                 
                 url = "https://groq.com"
                 headers = {
@@ -98,7 +98,7 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
                 antwort = requests.post(url, json=data, headers=headers, timeout=10)
                 antwort_text = antwort.json()["choices"]["message"]["content"]
             except Exception as e:
-                antwort_text = "Fehler bei der Verbindung zum Online-Server. Bitte überprüfe, ob GROQ_API_KEY in den Streamlit-Secrets eingetragen ist!"
+                antwort_text = "Fehler bei der Verbindung zum Online-Server. Bitte überprüfe, ob das Secrets-Format bei Streamlit stimmt!"
 
         antwort_platzhalter.markdown(antwort_text)
     
