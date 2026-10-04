@@ -65,15 +65,14 @@ else:
             antwort_platzhalter = st.empty()
             
             try:
-                # REPARIERTE VERBINDUNG MIT KORREKTEM MODELL UND INDEX [0]
+                # ABSOLUT KORREKTES, LIVE-GESCHALTETES MODELL
                 chat_completion = client.chat.completions.create(
                     messages=[
                         {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
                         {"role": "user", "content": eingabe}
                     ],
-                    model="llama-3.3-70b-versatile",
+                    model="openai/gpt-oss-20b",
                 )
-                # Hier lag der Fehler: Das [0] hat gefehlt!
                 antwort_text = chat_completion.choices[0].message.content
             except Exception as e:
                 antwort_text = f"Fehler bei der Verbindung: {str(e)}"
