@@ -36,7 +36,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("🤖 Scriton AI")
-st.write("Diese App läuft jetzt permanent im Internet – komplett unabhängig von deinem PC!")
+st.write("Ask your Question :)")
 
 def hole_wetter(stadt):
     try:
