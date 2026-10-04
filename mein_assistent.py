@@ -35,9 +35,13 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+# --- LOGO UND ÜBERSCHRIFTEN ---
+# Prüfen, ob deine hochgeladene Datei Scriton.png da ist, und sie ganz oben anzeigen
+if os.path.exists("Scriton.png"):
+    st.image("Scriton.png", width=120)
+
 st.title("🤖 Scriton AI")
 st.write("Ask your Question :)")
-st.title("Scriton AI")
 
 def hole_wetter(stadt):
     try:
