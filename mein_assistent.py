@@ -1,7 +1,6 @@
 import os
-import requests
 import streamlit as st
-from PIL import Image
+from groq import Groq
 
 # Setup für die App
 st.set_page_config(page_title="Scriton AI App", page_icon="🤖", layout="centered")
@@ -9,22 +8,14 @@ st.set_page_config(page_title="Scriton AI App", page_icon="🤖", layout="center
 # --- DESIGN FEST FÜR ALLE PROGRAMMIEREN (DUNKELBLAUER LOOK) ---
 st.markdown("""
     <style>
-    /* Hintergrund der gesamten App */
-    .stApp {
-        background-color: #111827 !important;
-    }
-    /* Alle Titel, Überschriften und normalen Texte auf Weiß setzen */
-    h1, h2, h3, p, span, .stMarkdown, label {
-        color: #ffffff !important;
-    }
-    /* Das Eingabefeld unten dunkel und mit blauem Rand stylen */
+    .stApp { background-color: #111827 !important; }
+    h1, h2, h3, p, span, .stMarkdown, label { color: #ffffff !important; }
     .stChatInput textarea {
         background-color: #1f2937 !important;
         color: #ffffff !important;
         border: 1px solid #3b82f6 !important;
         border-radius: 8px !important;
     }
-    /* Die Chat-Nachrichten-Boxen schicker machen */
     .stChatMessage {
         background-color: #1f2937 !important;
         border-radius: 12px !important;
@@ -42,15 +33,15 @@ if os.path.exists("Scriton.png"):
 st.title("🤖 Scriton AI")
 st.write("Ask your Question :)")
 
-def hole_wetter(stadt):
-    try:
-        url = f"https://wttr.in{stadt}?format=%C+%t"
-        antwort = requests.get(url, timeout=5)
-        if antwort.status_code == 200:
-            return antwort.text.strip()
-    except:
-        pass
-    return "Leider konnte ich das Wetter gerade nicht abrufen."
+# Hier nutzen wir die offizielle, sichere Verbindung
+@st.cache_resource
+def get_groq_client():
+    return Groq(api_key="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")
+
+try:
+    client = get_groq_client()
+except Exception as e:
+    st.error("Fehler beim Starten des KI-Clients. Bitte lade die Seite neu.")
 
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "assistant", "content": "Hallo! Ich bin Scriton AI. Ich bin jetzt rund um die Uhr online. Wie kann ich dir helfen?"}]
@@ -66,44 +57,20 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
 
     with st.chat_message("assistant"):
         antwort_platzhalter = st.empty()
-        antwort_text = ""
         
-        if "wetter" in eingabe.lower():
-            stadt = "Mank"
-            woerter = eingabe.split()
-            if "in" in woerter:
-                idx = woerter.index("in")
-                if idx + 1 < len(woerter):
-                    stadt = woerter[idx + 1].replace("?", "")
-            wetter_daten = hole_wetter(stadt)
-            antwort_text = f"Ich habe nachgesehen. Das Wetter in {stadt} ist aktuell: {wetter_daten}."
-            
-        else:
-            try:
-                # Hier sind die beiden Hälften jetzt zu 100% fehlerfrei und zeichengenau vereint
-                teil1 = "gsk_At66dGFvIIKRAo8XmHgXW"
-                teil2 = "tgdyb3FYtVijNZVNsXTltn5VcHjLDP9o"
-                apiKey = teil1 + teil2
-                
-                url = "https://groq.com"
-                headers = {
-                    "Authorization": f"Bearer {apiKey}",
-                    "Content-Type": "application/json"
-                }
-                data = {
-                    "model": "llama-3.1-8b-instant",
-                    "messages": [
-                        {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
-                        {"role": "user", "content": eingabe}
-                    ]
-                }
-                antwort = requests.post(url, json=data, headers=headers, timeout=10)
-                antwort_text = antwort.json()["choices"]["message"]["content"]
-            except Exception as e:
-                antwort_text = "Fehler bei der Verbindung zum Online-Server. Bitte versuche es gleich noch einmal!"
+        try:
+            # Offizieller Abruf über das Groq-System
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
+                    {"role": "user", "content": eingabe}
+                ],
+                model="llama-3.1-8b-instant",
+            )
+            antwort_text = chat_completion.choices[0].message.content
+        except Exception as e:
+            antwort_text = "Fehler bei der Verbindung zum Online-Server. Bitte versuche es gleich noch einmal!"
 
         antwort_platzhalter.markdown(antwort_text)
     
     st.session_state.messages.append({"role": "assistant", "content": antwort_text})
-
-
