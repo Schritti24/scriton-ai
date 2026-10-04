@@ -56,13 +56,13 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
         antwort_platzhalter = st.empty()
         
         try:
-            # HIER JETZT DAS AKTIVE MODELL EINGETRAGEN
+            # HIER JETZT DAS NEUE, GEPRÜFTE MODELL EINGETRAGEN
             chat_completion = client.chat.completions.create(
                 messages=[
                     {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
                     {"role": "user", "content": eingabe}
                 ],
-                model="llama-3.1-8b-instant",
+                model="llama-3.2-11b-vision-preview",
             )
             antwort_text = chat_completion.choices[0].message.content
         except Exception as e:
