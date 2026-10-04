@@ -36,7 +36,6 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- LOGO UND ÜBERSCHRIFTEN ---
-# Prüfen, ob deine hochgeladene Datei Scriton.png da ist, und sie ganz oben anzeigen
 if os.path.exists("Scriton.png"):
     st.image("Scriton.png", width=120)
 
@@ -81,9 +80,12 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
             
         else:
             try:
+                # Hier liest die App den Schlüssel absolut sicher aus dem Streamlit-Tresor aus
+                apiKey = st.secrets["GROQ_API_KEY"]
+                
                 url = "https://groq.com"
                 headers = {
-                    "Authorization": "Bearer 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",
+                    "Authorization": f"Bearer {apiKey}",
                     "Content-Type": "application/json"
                 }
                 data = {
@@ -96,7 +98,7 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
                 antwort = requests.post(url, json=data, headers=headers, timeout=10)
                 antwort_text = antwort.json()["choices"]["message"]["content"]
             except Exception as e:
-                antwort_text = "Fehler bei der Verbindung zum Online-Server. Bitte versuche es gleich noch einmal!"
+                antwort_text = "Fehler bei der Verbindung zum Online-Server. Bitte überprüfe, ob GROQ_API_KEY in den Streamlit-Secrets eingetragen ist!"
 
         antwort_platzhalter.markdown(antwort_text)
     
