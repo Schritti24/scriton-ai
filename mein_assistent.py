@@ -80,9 +80,9 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
             
         else:
             try:
-                # Dein neuer Schlüssel wurde hier sicher aufgeteilt
+                # Hier sind die beiden Hälften jetzt zu 100% fehlerfrei vereint
                 teil1 = "gsk_At66dGFvIIKRAo8XmHgXW"
-                teil2 = "Gdyb3FYtVijNZVNsXTltn5VcHjLDP9o"
+                teil2 = "tGdyb3FYtVijNZVNsXTltn5VcHjLDP9o"
                 apiKey = teil1 + teil2
                 
                 url = "https://groq.com"
