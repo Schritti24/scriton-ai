@@ -5,6 +5,36 @@ from PIL import Image
 
 # Setup für die App
 st.set_page_config(page_title="Scriton AI App", page_icon="🤖", layout="centered")
+
+# --- DESIGN FEST FÜR ALLE PROGRAMMIEREN (DUNKELBLAUER LOOK) ---
+st.markdown("""
+    <style>
+    /* Hintergrund der gesamten App */
+    .stApp {
+        background-color: #111827 !important;
+    }
+    /* Alle Titel, Überschriften und normalen Texte auf Weiß setzen */
+    h1, h2, h3, p, span, .stMarkdown, label {
+        color: #ffffff !important;
+    }
+    /* Das Eingabefeld unten dunkel und mit blauem Rand stylen */
+    .stChatInput textarea {
+        background-color: #1f2937 !important;
+        color: #ffffff !important;
+        border: 1px solid #3b82f6 !important;
+        border-radius: 8px !important;
+    }
+    /* Die Chat-Nachrichten-Boxen schicker machen */
+    .stChatMessage {
+        background-color: #1f2937 !important;
+        border-radius: 12px !important;
+        padding: 10px !important;
+        margin-bottom: 10px !important;
+        border: 1px solid #374151 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 st.title("🤖 Scriton AI")
 st.write("Diese App läuft jetzt permanent im Internet – komplett unabhängig von deinem PC!")
 
@@ -46,7 +76,6 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
             
         else:
             try:
-                # Wir nutzen ein ultraschnelles, freies Online-Modell über eine offene Schnittstelle
                 url = "https://groq.com"
                 headers = {
                     "Authorization": "Bearer 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",
@@ -60,7 +89,7 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
                     ]
                 }
                 antwort = requests.post(url, json=data, headers=headers, timeout=10)
-                antwort_text = antwort.json()["choices"][0]["message"]["content"]
+                antwort_text = antwort.json()["choices"]["message"]["content"]
             except Exception as e:
                 antwort_text = "Fehler bei der Verbindung zum Online-Server. Bitte versuche es gleich noch einmal!"
 
