@@ -8,22 +8,14 @@ st.set_page_config(page_title="Scriton AI App", page_icon="🤖", layout="center
 # --- DESIGN FEST FÜR ALLE PROGRAMMIEREN (DUNKELBLAUER LOOK) ---
 st.markdown("""
     <style>
-    /* Hintergrund der gesamten App */
-    .stApp {
-        background-color: #111827 !important;
-    }
-    /* Alle Titel, Überschriften und normalen Texte auf Weiß setzen */
-    h1, h2, h3, p, span, .stMarkdown, label {
-        color: #ffffff !important;
-    }
-    /* Das Eingabefeld unten dunkel und mit blauem Rand stylen */
+    .stApp { background-color: #111827 !important; }
+    h1, h2, h3, p, span, .stMarkdown, label { color: #ffffff !important; }
     .stChatInput textarea {
         background-color: #1f2937 !important;
         color: #ffffff !important;
         border: 1px solid #3b82f6 !important;
         border-radius: 8px !important;
     }
-    /* Die Chat-Nachrichten-Boxen schicker machen */
     .stChatMessage {
         background-color: #1f2937 !important;
         border-radius: 12px !important;
@@ -73,15 +65,16 @@ else:
             antwort_platzhalter = st.empty()
             
             try:
-                # HIER WAR DER PROBLEM-FEHLER: Neues, aktives Modell eingetragen!
+                # REPARIERTE VERBINDUNG MIT KORREKTEM MODELL UND INDEX [0]
                 chat_completion = client.chat.completions.create(
                     messages=[
                         {"role": "system", "content": "Du bist eine hilfreiche KI und dein Name ist Scriton AI. Antworte immer freundlich auf Deutsch."},
                         {"role": "user", "content": eingabe}
                     ],
-                    model="openai/gpt-oss-20b",
+                    model="llama-3.3-70b-versatile",
                 )
-                antwort_text = chat_completion.choices.message.content
+                # Hier lag der Fehler: Das [0] hat gefehlt!
+                antwort_text = chat_completion.choices[0].message.content
             except Exception as e:
                 antwort_text = f"Fehler bei der Verbindung: {str(e)}"
 
