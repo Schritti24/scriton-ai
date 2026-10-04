@@ -80,9 +80,9 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
             
         else:
             try:
-                # Hier sind die beiden Hälften jetzt zu 100% fehlerfrei vereint
+                # Hier sind die beiden Hälften jetzt zu 100% fehlerfrei und zeichengenau vereint
                 teil1 = "gsk_At66dGFvIIKRAo8XmHgXW"
-                teil2 = "tGdyb3FYtVijNZVNsXTltn5VcHjLDP9o"
+                teil2 = "tgdyb3FYtVijNZVNsXTltn5VcHjLDP9o"
                 apiKey = teil1 + teil2
                 
                 url = "https://groq.com"
@@ -105,3 +105,5 @@ if eingabe := st.chat_input("Schreibe Scriton AI..."):
         antwort_platzhalter.markdown(antwort_text)
     
     st.session_state.messages.append({"role": "assistant", "content": antwort_text})
+
+
